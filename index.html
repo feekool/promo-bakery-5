@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="theme-color" content="#e85d26">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>BakeForum — Кондитерское сообщество | Творите • Делитесь • Расти</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --sunset: #e85d26;
+            --sunset-dark: #c94d1c;
+            --sunset-light: #ff9f6a;
+            --amber: #f5b041;
+            --amber-light: #ffe8c2;
+            --peach: #fde2cc;
+            --cream: #fff8f3;
+            --charcoal: #2d2420;
+            --text: #3d2a1f;
+            --text-muted: #6b5545;
+            --text-light: #8b7265;
+            --white: #ffffff;
+            --border: #f0d8c8;
+            
+            --shadow-sm: 0 2px 12px rgba(232, 93, 38, 0.08);
+            --shadow-md: 0 8px 32px rgba(232, 93, 38, 0.12);
+            --shadow-lg: 0 16px 48px rgba(232, 93, 38, 0.18);
+            --shadow-hover: 0 24px 56px rgba(232, 93, 38, 0.25);
+            
+            --radius-xl: 28px;
+            --radius-lg: 22px;
+            --radius-md: 16px;
+            --radius-sm: 10px;
+            --radius-pill: 100px;
+            
+            --ease: cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
+        html { scroll-behavior: smooth; }
+        
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--cream);
+            color: var(--text);
+            line-height: 1.65;
+            font-size: clamp(14px, 1.8vw, 16px);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        /* Декоративный фон */
+        body::before {
+            content: ""; position: fixed; inset: 0;
+            background: 
+                radial-gradient(1400px 500px at 10% 15%, rgba(255, 159, 106, 0.2), transparent 50%),
+                radial-gradient(800px 400px at 90% 85%, rgba(245, 176, 65, 0.12), transparent 40%),
+                linear-gradient(180deg, rgba(253, 226, 204, 0.3), transparent 30%);
+            pointer-events: none; z-index: -1;
+        }
+        
+        .container { max-width: 1360px; margin: 0 auto; padding: 0 clamp(20px, 4vw, 40px); }
+        
+        /* Typography */
+        h1, h2, h3, h4 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; line-height: 1.1; letter-spacing: -0.03em; }
+        
+        /* Header */
+        .navbar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: clamp(16px, 3vw, 24px) 0; position: sticky; top: 0;
+            background: rgba(255, 248, 243, 0.88); backdrop-filter: blur(12px);
+            z-index: 100; border-bottom: 1px solid var(--border);
+        }
+        .logo { display: flex; align-items: center; gap: 14px; text-decoration: none; }
+        .logo-icon {
+            width: clamp(46px, 8vw, 54px); height: clamp(46px, 8vw, 54px);
+            background: linear-gradient(135deg, var(--sunset), var(--amber));
+            border-radius: 14px; display: flex; align-items: center; justify-content: center;
+            font-size: clamp(22px, 5vw, 28px); box-shadow: 0 4px 16px rgba(232, 93, 38, 0.3); flex-shrink: 0;
+        }
+        .logo-text h1 { font-size: clamp(1.5rem, 4.2vw, 1.9rem); margin: 0; color: var(--text); }
+        .logo-text p { font-size: clamp(0.75rem, 2.5vw, 0.85rem); color: var(--text-light); margin: 3px 0 0; }
+        .nav-actions { display: flex; gap: clamp(10px, 2.5vw, 16px); flex-wrap: wrap; }
+        
+        /* Buttons */
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+            padding: clamp(12px, 2.8vw, 16px) clamp(22px, 5vw, 34px);
+            border-radius: var(--radius-pill); font-weight: 600;
+            font-size: clamp(0.92rem, 2.8vw, 1.05rem); text-decoration: none;
+            transition: all 0.3s var(--ease); cursor: pointer; border: none; min-height: 50px; white-space: nowrap;
+        }
+        .btn-primary { background: linear-gradient(135deg, var(--sunset), var(--sunset-dark)); color: white; box-shadow: var(--shadow-md); }
+        .btn-primary:hover { transform: translateY(-3px) scale(1.02); box-shadow: var(--shadow-hover); }
+        .btn-accent { background: linear-gradient(135deg, var(--amber), var(--sunset-light)); color: var(--charcoal); box-shadow: 0 8px 24px rgba(245, 176, 65, 0.35); }
+        .btn-accent:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 16px 40px rgba(245, 176, 65, 0.45); }
+        .btn-outline { background: transparent; border: 2px solid var(--sunset); color: var(--sunset-dark); }
+        .btn-outline:hover { background: rgba(232, 93, 38, 0.06); transform: translateY(-2px); }
+        .btn-ghost { background: transparent; color: var(--text); border: 1.5px solid var(--border); }
+        .btn-ghost:hover { border-color: var(--sunset); background: rgba(232, 93, 38, 0.04); }
+        .btn-large { padding: clamp(16px, 3.5vw, 20px) clamp(34px, 7vw, 48px); font-size: clamp(1.05rem, 3.2vw, 1.15rem); }
+        .btn-full-mobile { width: 100%; max-width: 360px; }
+        
+        /* Hero Section - Bold Asymmetric */
+        .hero { padding: clamp(64px, 12vw, 112px) 0 clamp(56px, 10vw, 88px); position: relative; }
+        .hero-content { max-width: 800px; }
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: linear-gradient(135deg, rgba(232, 93, 38, 0.1), rgba(245, 176, 65, 0.15));
+            padding: clamp(8px, 2.5vw, 12px) clamp(18px, 4vw, 28px); border-radius: var(--radius-pill);
+            font-weight: 700; font-size: clamp(0.9rem, 2.8vw, 1rem); color: var(--sunset-dark);
+            margin-bottom: clamp(20px, 4.5vw, 32px); border: 1px solid var(--amber-light);
+        }
+        .hero h2 { font-size: clamp(2.4rem, 8vw, 3.8rem); margin-bottom: clamp(20px, 4.5vw, 32px); color: var(--text); }
+        .hero h2 .highlight { background: linear-gradient(135deg, var(--sunset), var(--amber)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .hero p { font-size: clamp(1.12rem, 3.8vw, 1.35rem); color: var(--text-muted); max-width: 720px; margin: 0 auto clamp(32px, 5.5vw, 48px); }
+        .hero-buttons { display: flex; flex-wrap: wrap; gap: clamp(16px, 4vw, 24px); margin-bottom: clamp(32px, 6vw, 56px); }
+        
+        /* Hero Stats Bar */
+        .stats-bar {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: clamp(16px, 3vw, 24px);
+            max-width: 640px; padding: clamp(16px, 3vw, 24px); background: white;
+            border-radius: var(--radius-xl); box-shadow: var(--shadow-lg); border: 1px solid var(--border);
+        }
+        .stat { text-align: center; }
+        .stat-value { font-family: 'Space Grotesk', sans-serif; font-size: clamp(1.4rem, 3.5vw, 1.8rem); font-weight: 700; color: var(--sunset); }
+        .stat-label { font-size: clamp(0.8rem, 2.5vw, 0.9rem); color: var(--text-light); margin-top: 4px; }
+        
+        /* Quick Links */
+        .quick-links { display: flex; flex-wrap: wrap; justify-content: center; gap: clamp(10px, 2.5vw, 14px); padding: clamp(16px, 3vw, 24px); background: white; border-radius: var(--radius-xl); margin: clamp(24px, 4.5vw, 48px) 0; box-shadow: var(--shadow-sm); border: 1px solid var(--border); }
+        
+        /* Sections */
+        .section { padding: clamp(72px, 12vw, 112px) 0; }
+        .section-header { text-align: center; max-width: 800px; margin: 0 auto clamp(48px, 7.5vw, 72px); }
+        .section-header h2 { font-size: clamp(2.2rem, 6.5vw, 3rem); margin-bottom: clamp(16px, 3.5vw, 28px); color: var(--text); }
+        .section-header p { font-size: clamp(1.08rem, 3.2vw, 1.18rem); color: var(--text-muted); }
+        
+        /* Features Grid */
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: clamp(24px, 4vw, 36px); }
+        .feature-card {
+            background: white; border-radius: var(--radius-lg); padding: clamp(28px, 4.5vw, 40px);
+            box-shadow: var(--shadow-md); transition: all 0.3s var(--ease); border: 1px solid var(--border);
+            display: flex; flex-direction: column; gap: clamp(16px, 3vw, 20px); position: relative; overflow: hidden;
+        }
+        .feature-card::before { content: ""; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(232, 93, 38, 0.03), transparent); opacity: 0; transition: opacity 0.3s var(--ease); }
+        .feature-card:hover { transform: translateY(-8px) scale(1.01); box-shadow: var(--shadow-hover); border-color: var(--sunset-light); }
+        .feature-card:hover::before { opacity: 1; }
+        .feature-icon { width: clamp(64px, 10vw, 76px); height: clamp(64px, 10vw, 76px); background: linear-gradient(135deg, var(--peach), var(--amber-light)); border-radius: 22px; display: flex; align-items: center; justify-content: center; font-size: clamp(2rem, 4.5vw, 2.6rem); flex-shrink: 0; }
+        .feature-card h3 { font-size: clamp(1.25rem, 3.8vw, 1.45rem); color: var(--text); margin: 0; }
+        .feature-card p { color: var(--text-muted); font-size: clamp(0.98rem, 3vw, 1.05rem); margin: 0; line-height: 1.55; }
+        .feature-card .btn { margin-top: auto; align-self: flex-start; }
+        
+        /* Directions Section - Large Detailed Cards */
+        .directions-section { background: white; border-radius: var(--radius-xl); padding: clamp(40px, 7vw, 72px); box-shadow: var(--shadow-lg); border: 1px solid var(--border); }
+        .directions-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); gap: clamp(24px, 4vw, 36px); }
+        .direction-card {
+            border-radius: var(--radius-lg); overflow: hidden; background: var(--cream);
+            border: 1px solid var(--border); transition: all 0.3s var(--ease);
+        }
+        .direction-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-hover); border-color: var(--sunset-light); }
+        .direction-header { padding: clamp(24px, 4.5vw, 32px); display: flex; align-items: center; gap: 16px; }
+        .direction-icon { font-size: clamp(2rem, 4.5vw, 2.5rem); width: 64px; height: 64px; background: white; border-radius: 18px; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm); flex-shrink: 0; }
+        .direction-header h3 { font-size: clamp(1.3rem, 4vw, 1.5rem); color: var(--text); margin: 0; }
+        .direction-header p { font-size: clamp(0.95rem, 2.8vw, 1rem); color: var(--text-muted); margin: 6px 0 0; }
+        .direction-body { padding: 0 clamp(24px, 4.5vw, 32px) clamp(24px, 4.5vw, 32px); }
+        .direction-features { list-style: none; margin-bottom: clamp(16px, 3.5vw, 24px); }
+        .direction-features li { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 14px; color: var(--text-muted); font-size: clamp(0.95rem, 3vw, 1rem); line-height: 1.4; }
+        .direction-features li .check { color: var(--sunset); font-weight: 800; font-size: 1.2em; margin-top: 2px; }
+        .direction-footer { padding: 0 clamp(24px, 4.5vw, 32px) clamp(24px, 4.5vw, 32px); }
+        .direction-footer .btn { width: 100%; }
+        
+        /* Installation */
+        .install-wrapper { background: white; border-radius: var(--radius-xl); padding: clamp(40px, 7vw, 72px); box-shadow: var(--shadow-lg); border: 1px solid var(--border); }
+        .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: clamp(20px, 3.5vw, 32px); margin-top: clamp(32px, 6vw, 56px); }
+        .step-card { padding: clamp(24px, 4.5vw, 32px); background: var(--cream); border-radius: var(--radius-md); border: 2px solid transparent; position: relative; transition: all 0.3s var(--ease); }
+        .step-card:hover { border-color: var(--sunset-light); background: white; }
+        .step-number { width: 44px; height: 44px; background: linear-gradient(135deg, var(--sunset), var(--amber)); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.1rem; margin-bottom: 16px; box-shadow: var(--shadow-md); }
+        .step-card h4 { font-size: clamp(1.15rem, 3.5vw, 1.3rem); margin-bottom: 12px; color: var(--text); }
+        .step-card p, .step-card a { color: var(--text-muted); font-size: clamp(0.95rem, 3vw, 1rem); line-height: 1.5; }
+        .step-card a { color: var(--sunset-dark); text-decoration: none; font-weight: 600; word-break: break-all; }
+        .step-card a:hover { text-decoration: underline; }
+        .install-tip { background: linear-gradient(135deg, var(--peach), var(--amber-light)); border-radius: var(--radius-md); padding: clamp(20px, 4vw, 28px); margin-top: clamp(32px, 6vw, 56px); text-align: center; }
+        .install-tip strong { color: var(--sunset-dark); font-weight: 700; }
+        
+        /* Testimonials */
+        .testimonials-wrapper { background: white; border-radius: var(--radius-xl); padding: clamp(40px, 7vw, 72px); box-shadow: var(--shadow-lg); border: 1px solid var(--border); }
+        .testimonial-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: clamp(24px, 4.5vw, 36px); }
+        .testimonial-card { background: var(--cream); border-radius: var(--radius-md); padding: clamp(24px, 4.5vw, 32px); border-top: 4px solid var(--sunset); transition: all 0.3s var(--ease); }
+        .testimonial-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+        .testimonial-text { font-size: clamp(1rem, 3vw, 1.08rem); color: var(--text); line-height: 1.65; margin-bottom: 20px; font-style: italic; }
+        .testimonial-author { display: flex; align-items: center; gap: 14px; }
+        .author-avatar { width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(135deg, var(--sunset), var(--amber)); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 1.1rem; flex-shrink: 0; }
+        .author-info strong { display: block; color: var(--text); font-size: clamp(1rem, 3vw, 1.05rem); font-weight: 600; }
+        .author-info span { color: var(--text-light); font-size: clamp(0.82rem, 2.6vw, 0.88rem); }
+        
+        /* Gallery */
+        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: clamp(20px, 3.5vw, 28px); margin-top: clamp(32px, 6vw, 56px); }
+        .gallery-card { background: white; border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-md); transition: all 0.3s var(--ease); border: 1px solid var(--border); }
+        .gallery-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-hover); }
+        .gallery-image { width: 100%; aspect-ratio: 4/3; background: linear-gradient(135deg, var(--sunset-light), var(--amber)); display: flex; align-items: center; justify-content: center; font-size: clamp(3rem, 7vw, 4.5rem); color: white; background-size: cover; background-position: center; position: relative; }
+        .gallery-image::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(61, 42, 31, 0.6), transparent 70%); }
+        .gallery-caption { padding: clamp(14px, 3vw, 20px); text-align: center; }
+        .gallery-caption h4 { font-size: clamp(1.05rem, 3.2vw, 1.15rem); color: var(--text); margin-bottom: 6px; font-weight: 600; }
+        .gallery-caption p { font-size: clamp(0.88rem, 2.7vw, 0.92rem); color: var(--text-light); }
+        .gallery-url-input { display: flex; gap: 10px; margin-top: clamp(14px, 3vw, 20px); padding: 0 clamp(14px, 3vw, 20px) clamp(20px, 3.5vw, 28px); }
+        .gallery-url-input input { flex: 1; padding: clamp(10px, 2.5vw, 12px) clamp(14px, 3.5vw, 18px); border: 2px solid var(--border); border-radius: var(--radius-pill); font-size: clamp(0.82rem, 2.6vw, 0.88rem); background: var(--cream); transition: all 0.3s var(--ease); }
+        .gallery-url-input input:focus { outline: none; border-color: var(--sunset); box-shadow: 0 0 0 4px rgba(232, 93, 38, 0.15); }
+        .gallery-url-input button { padding: clamp(10px, 2.5vw, 12px) clamp(16px, 3.5vw, 22px); background: var(--sunset); color: white; border: none; border-radius: var(--radius-pill); font-weight: 600; font-size: clamp(0.82rem, 2.6vw, 0.88rem); cursor: pointer; transition: all 0.3s var(--ease); }
+        .gallery-url-input button:hover { background: var(--sunset-dark); transform: translateY(-2px); }
+        
+        /* CTA */
+        .cta-section { text-align: center; background: linear-gradient(135deg, var(--sunset), var(--sunset-dark)); border-radius: var(--radius-xl); padding: clamp(48px, 8.5vw, 80px) clamp(28px, 5vw, 48px); margin: clamp(24px, 4.5vw, 48px) 0; color: white; position: relative; overflow: hidden; }
+        .cta-section::before { content: "✨"; position: absolute; top: 20px; left: 20px; font-size: 3rem; opacity: 0.15; pointer-events: none; }
+        .cta-section::after { content: "🎂"; position: absolute; bottom: 20px; right: 20px; font-size: 4rem; opacity: 0.1; pointer-events: none; }
+        .cta-badge { display: inline-flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); padding: clamp(10px, 2.5vw, 14px) clamp(24px, 4.5vw, 40px); border-radius: var(--radius-pill); font-weight: 700; font-size: clamp(0.95rem, 3vw, 1.05rem); margin-bottom: clamp(24px, 5vw, 40px); border: 1px solid rgba(255,255,255,0.3); }
+        .cta-section h3 { font-size: clamp(1.8rem, 5.5vw, 2.6rem); margin-bottom: clamp(18px, 4vw, 32px); color: white; }
+        .cta-section p { max-width: 720px; margin: 0 auto clamp(28px, 5.5vw, 48px); font-size: clamp(1.08rem, 3.2vw, 1.18rem); color: rgba(255,255,255,0.9); line-height: 1.6; }
+        .cta-buttons { display: flex; flex-wrap: wrap; justify-content: center; gap: clamp(16px, 3.5vw, 28px); margin: clamp(28px, 5.5vw, 40px) 0; }
+        .cta-buttons .btn-white { background: white; color: var(--sunset-dark); box-shadow: 0 8px 24px rgba(0,0,0,0.1); font-weight: 700; }
+        .cta-buttons .btn-white:hover { transform: translateY(-3px); box-shadow: 0 16px 40px rgba(0,0,0,0.15); }
+        .cta-buttons .btn-outline-white { background: transparent; border: 2px solid rgba(255,255,255,0.6); color: white; }
+        .cta-buttons .btn-outline-white:hover { background: rgba(255,255,255,0.1); border-color: white; transform: translateY(-2px); }
+        .cta-guarantee { background: rgba(255,255,255,0.15); backdrop-filter: blur(8px); border-radius: var(--radius-pill); padding: clamp(14px, 3.5vw, 20px) clamp(28px, 5.5vw, 40px); max-width: 640px; margin: clamp(32px, 6vw, 48px) auto 0; font-size: clamp(0.98rem, 3vw, 1.05rem); border: 1px solid rgba(255,255,255,0.3); }
+        .cta-guarantee strong { font-weight: 700; }
+        
+        /* Final Actions */
+        .final-actions { display: flex; justify-content: center; flex-wrap: wrap; gap: clamp(14px, 3.5vw, 28px); margin: clamp(28px, 5.5vw, 56px) 0; padding: clamp(24px, 4.5vw, 40px); background: white; border-radius: var(--radius-xl); box-shadow: var(--shadow-lg); border: 1px solid var(--border); }
+        
+        /* Footer */
+        footer { padding: clamp(48px, 7.5vw, 72px) 0 clamp(40px, 6.5vw, 64px); text-align: center; color: var(--text-light); font-size: clamp(0.88rem, 2.7vw, 0.98rem); line-height: 1.75; border-top: 1px solid var(--border); margin-top: clamp(24px, 4.5vw, 48px); }
+        footer a { color: var(--sunset-dark); text-decoration: none; font-weight: 600; }
+        footer a:hover { text-decoration: underline; }
+        
+        /* Mobile CTA */
+        .mobile-cta { display: none; position: fixed; bottom: clamp(18px, 3.5vw, 28px); left: clamp(18px, 3.5vw, 28px); right: clamp(18px, 3.5vw, 28px); z-index: 999; padding: clamp(12px, 3vw, 16px); background: white; border-radius: 24px; box-shadow: var(--shadow-hover); animation: slideUp 0.4s var(--ease); border: 1px solid var(--border); }
+        @keyframes slideUp { from { transform: translateY(100px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .mobile-cta .btn { width: 100%; padding: clamp(16px, 3.5vw, 20px); font-size: clamp(1.05rem, 3.2vw, 1.1rem); }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .navbar { flex-direction: column; gap: clamp(14px, 3.5vw, 24px); text-align: center; }
+            .nav-actions { justify-content: center; width: 100%; }
+            .hero-buttons .btn { flex: 1; min-width: 160px; }
+            .cta-buttons .btn { flex: 1; min-width: 170px; max-width: 300px; }
+            .final-actions { flex-direction: column; align-items: center; }
+            .final-actions .btn { width: 100%; max-width: 360px; }
+            .directions-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 480px) {
+            .hero h2 { font-size: 2rem; }
+            .section-header h2 { font-size: 1.8rem; }
+            .stats-bar { grid-template-columns: 1fr 1fr; }
+        }
+        @media (max-width: 768px) { .mobile-cta { display: block; } }
+        
+        /* Accessibility */
+        .btn:focus, input:focus, a:focus { outline: 2px solid var(--sunset); outline-offset: 2px; }
+        @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Header -->
+    <nav class="navbar" aria-label="Главная навигация">
+        <a href="#" class="logo">
+            <div class="logo-icon" aria-hidden="true">🔥</div>
+            <div class="logo-text">
+                <h1>BakeForum</h1>
+                <p>Творите. Делитесь. Расти.</p>
+            </div>
+        </a>
+        <div class="nav-actions">
+            <a href="https://feekool.github.io" target="_blank" class="btn btn-ghost" aria-label="Открыть демо">🇷🇺 Демо</a>
+            <a href="#contact" class="btn btn-primary">✉️ Связаться</a>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-content">
+            <div class="hero-badge">🌅 Платформа для кондитеров и пекарей</div>
+            <h2 id="hero-title">Ваше кондитерское <span class="highlight">пространство</span> без границ</h2>
+            <p>Создайте форум для мастер-классов, витрины тортов или кулинарного блога. Без серверов, без абонентской платы — только вы и ваше творчество. Запуск за 60 секунд.</p>
+            <div class="hero-buttons">
+                <a href="https://feekool.github.io" target="_blank" class="btn btn-primary btn-large btn-full-mobile">👁️ Смотреть демо</a>
+                <a href="https://github.com/feekool/feekool.github.io" target="_blank" class="btn btn-outline btn-large btn-full-mobile">📦 Взять шаблон</a>
+            </div>
+        </div>
+        <div class="stats-bar">
+            <div class="stat"><div class="stat-value">1 мин</div><div class="stat-label">на запуск</div></div>
+            <div class="stat"><div class="stat-value">🆓</div><div class="stat-label">навсегда бесплатно</div></div>
+            <div class="stat"><div class="stat-value">🔒</div><div class="stat-label">полный контроль</div></div>
+        </div>
+    </section>
+
+    <!-- Quick Links -->
+    <div class="quick-links" role="navigation" aria-label="Быстрые ссылки">
+        <a href="https://feekool.github.io" target="_blank" class="btn btn-ghost">🔗 Демо-форум</a>
+        <a href="https://feekool.github.io" target="_blank" class="btn btn-ghost">📱 Мобильная версия</a>
+        <a href="https://github.com/feekool/feekool.github.io" target="_blank" class="btn btn-ghost">🐙 GitHub</a>
+        <a href="#install" class="btn btn-ghost">📚 Инструкция</a>
+        <a href="#directions" class="btn btn-ghost">🧭 Направления</a>
+        <a href="#testimonials" class="btn btn-ghost">💬 Отзывы</a>
+    </div>
+
+    <!-- Features -->
+    <section class="section" aria-labelledby="features-title">
+        <div class="section-header">
+            <h2 id="features-title">Почему выбирают BakeForum</h2>
+            <p>Гибкая инфраструктура для любого масштаба — от домашней пекарни до крупной онлайн-школы</p>
+        </div>
+        <div class="features-grid">
+            <article class="feature-card">
+                <div class="feature-icon" aria-hidden="true">⚡</div>
+                <h3>Мгновенный запуск</h3>
+                <p>Клонирование шаблона → включение Pages → ваш форум готов. Никаких серверов, оплат за хостинг или настройки.</p>
+                <a href="https://feekool.github.io" target="_blank" class="btn btn-outline">👉 Попробовать</a>
+            </article>
+            <article class="feature-card">
+                <div class="feature-icon" aria-hidden="true">🎨</div>
+                <h3>Адаптация под стиль</h3>
+                <p>Меняйте цвета, логотип, разделы. Форум легко кастомизировать под бренд вашей пекарни или школы.</p>
+                <a href="https://feekool.github.io" target="_blank" class="btn btn-outline">👁️ Примеры</a>
+            </article>
+            <article class="feature-card">
+                <div class="feature-icon" aria-hidden="true">📂</div>
+                <h3>Умная структура</h3>
+                <p>Создавайте разделы: портфолио, уроки, рецепты, вопросы. Клиенты и ученики найдут нужное за секунды.</p>
+                <a href="https://feekool.github.io" target="_blank" class="btn btn-outline">🔐 Демо</a>
+            </article>
+        </div>
+    </section>
+
+    <!-- Directions -->
+    <section class="section" id="directions" aria-labelledby="directions-title">
+        <div class="section-header">
+            <h2 id="directions-title">🧭 Как используют платформу</h2>
+            <p>Одно решение — десятки сценариев для вашего кондитерского дела</p>
+        </div>
+        <div class="directions-section">
+            <div class="directions-grid">
+                <div class="direction-card">
+                    <div class="direction-header">
+                        <div class="direction-icon">🎂</div>
+                        <div><h3>Авторские торты на заказ</h3><p>Портфолио + коммуникация с клиентами</p></div>
+                    </div>
+                    <div class="direction-body">
+                        <ul class="direction-features">
+                            <li><span class="check">✓</span> Галерея работ с фильтрами по стилям и категориям</li>
+                            <li><span class="check">✓</span> Раздел "Отзывы" для социального доказательства</li>
+                            <li><span class="check">✓</span> Прайс-листы и формы заявок в статичных разделах</li>
+                            <li><span class="check">✓</span> Приватные обсуждения деталей заказов</li>
+                        </ul>
+                    </div>
+                    <div class="direction-footer"><a href="https://feekool.github.io" target="_blank" class="btn btn-outline">👁️ Посмотреть пример</a></div>
+                </div>
+                <div class="direction-card">
+                    <div class="direction-header">
+                        <div class="direction-icon">🎓</div>
+                        <div><h3>Онлайн-курсы кондитеров</h3><p>Обучение + домашние задания + сертификаты</p></div>
+                    </div>
+                    <div class="direction-body">
+                        <ul class="direction-features">
+                            <li><span class="check">✓</span> Структурированные модули: Видео → Теория → Практика</li>
+                            <li><span class="check">✓</span> Загрузка работ учениками и разбор ошибок</li>
+                            <li><span class="check">✓</span> FAQ + база знаний по ингредиентам и техникам</li>
+                            <li><span class="check">✓</span> Закрытые разделы для VIP-потоков и менторства</li>
+                        </ul>
+                    </div>
+                    <div class="direction-footer"><a href="https://feekool.github.io" target="_blank" class="btn btn-outline">👁️ Посмотреть пример</a></div>
+                </div>
+                <div class="direction-card">
+                    <div class="direction-header">
+                        <div class="direction-icon">🏪</div>
+                        <div><h3>Пекарня / Кофейня</h3><p>Меню + акции + лояльность</p></div>
+                    </div>
+                    <div class="direction-body">
+                        <ul class="direction-features">
+                            <li><span class="check">✓</span> Цифровое меню с фото, составом и калориями</li>
+                            <li><span class="check">✓</span> Раздел "Акции и сезонные предложения"</li>
+                            <li><span class="check">✓</span> Программа лояльности: баллы, реферальные бонусы</li>
+                            <li><span class="check">✓</span> Календарь мастер-классов и дегустаций</li>
+                        </ul>
+                    </div>
+                    <div class="direction-footer"><a href="https://feekool.github.io" target="_blank" class="btn btn-outline">👁️ Посмотреть пример</a></div>
+                </div>
+                <div class="direction-card">
+                    <div class="direction-header">
+                        <div class="direction-icon">📚</div>
+                        <div><h3>Кулинарная библиотека</h3><p>Рецепты + техники + глоссарий</p></div>
+                    </div>
+                    <div class="direction-body">
+                        <ul class="direction-features">
+                            <li><span class="check">✓</span> Навигация по тегам: выпечка, крем, безглютен, веган</li>
+                            <li><span class="check">✓</span> Шаблоны рецептов с указанием калорий и времени</li>
+                            <li><span class="check">✓</span> Раздел "Частые ошибки и как их исправить"</li>
+                            <li><span class="check">✓</span> Комментирование и сохранение избранного</li>
+                        </ul>
+                    </div>
+                    <div class="direction-footer"><a href="https://feekool.github.io" target="_blank" class="btn btn-outline">👁️ Посмотреть пример</a></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Installation -->
+    <section class="section" id="install" aria-labelledby="install-title">
+        <div class="section-header">
+            <h2 id="install-title">5 шагов к вашему форуму</h2>
+            <p>Никаких технических знаний. Только 1 минута вашего времени.</p>
+        </div>
+        <div class="install-wrapper">
+            <div class="steps-grid">
+                <div class="step-card"><div class="step-number">1</div><h4>GitHub аккаунт</h4><p>Регистрация на <a href="https://github.com" target="_blank">github.com</a> — меньше минуты.</p></div>
+                <div class="step-card"><div class="step-number">2</div><h4>Откройте шаблон</h4><p><a href="https://github.com/feekool/feekool.github.io" target="_blank">github.com/feekool/feekool.github.io</a></p></div>
+                <div class="step-card"><div class="step-number">3</div><h4>Создайте репозиторий</h4><p>Нажмите "Use this template" → "Create a new repository".</p></div>
+                <div class="step-card"><div class="step-number">4</div><h4>Включите GitHub Pages</h4><p>Settings → Pages → ветка main → Save. 60 сек — и форум онлайн.</p></div>
+                <div class="step-card"><div class="step-number">5</div><h4>Наполните контентом</h4><p>Категории, фото, уроки. Всё под вашим контролем 🎉</p></div>
+            </div>
+            <div class="install-tip">💡 <strong>Совет:</strong> GitHub Pages — бесплатный хостинг с SSL, кэшированием и защитой от сбоев. Идеально для кондитерских блогов.</div>
+            <div style="text-align: center; margin-top: clamp(32px, 6vw, 56px);">
+                <a href="https://feekool.github.io" target="_blank" class="btn btn-primary btn-large btn-full-mobile" style="margin-bottom: 14px;">👁️ Посмотреть демо</a><br>
+                <a href="https://github.com/feekool/feekool.github.io" target="_blank" class="btn btn-accent btn-large btn-full-mobile">⚡ Начать сейчас</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="section" id="testimonials" aria-labelledby="testimonials-title">
+        <div class="section-header">
+            <h2 id="testimonials-title">Отзывы профессионалов</h2>
+            <p>Те, кто уже использует платформу для роста</p>
+        </div>
+        <div class="testimonials-wrapper">
+            <div class="testimonial-grid">
+                <div class="testimonial-card">
+                    <p class="testimonial-text">«Перенесла все уроки и материалы учеников на BakeForum. Теперь не теряю файлы в чатах, а структура разделов экономит мне 3 часа в неделю.»</p>
+                    <div class="testimonial-author"><div class="author-avatar">АК</div><div class="author-info"><strong>Анна К.</strong><span>Преподаватель кондитерского искусства</span></div></div>
+                </div>
+                <div class="testimonial-card">
+                    <p class="testimonial-text">«Использую как портфолио для тортов на заказ. Клиенты видят галерею, читают отзывы, оставляют заявки. Выглядит солиднее, чем Instagram-аккаунт.»</p>
+                    <div class="testimonial-author"><div class="author-avatar">МС</div><div class="author-info"><strong>Мария С.</strong><span>Авторские торты, Москва</span></div></div>
+                </div>
+                <div class="testimonial-card">
+                    <p class="testimonial-text">«Закрытый клуб для подписчиков с эксклюзивными рецептами работает идеально. Техподдержка помогла настроить визуал под мой бренд.»</p>
+                    <div class="testimonial-author"><div class="author-avatar">ДП</div><div class="author-info"><strong>Дмитрий П.</strong><span>Основатель кулинарного блога</span></div></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery -->
+    <section class="section" id="gallery" aria-labelledby="gallery-title">
+        <div class="section-header">
+            <h2 id="gallery-title">Галерея работ</h2>
+            <p>Примеры оформления разделов вашего форума</p>
+        </div>
+        <div class="gallery-grid">
+            <div class="gallery-card"><div class="gallery-image" style="background-image: url('https://picsum.photos/id/282/400/300');">🎂</div><div class="gallery-caption"><h4>Свадебный торт</h4><p>Категория: Портфолио</p></div><div class="gallery-url-input"><input type="text" placeholder="URL вашего фото" value="https://picsum.photos/id/282/400/300"><button>OK</button></div></div>
+            <div class="gallery-card"><div class="gallery-image" style="background-image: url('https://picsum.photos/id/292/400/300');">🧁</div><div class="gallery-caption"><h4>Капкейки</h4><p>Категория: Рецепты</p></div><div class="gallery-url-input"><input type="text" placeholder="URL вашего фото" value="https://picsum.photos/id/292/400/300"><button>OK</button></div></div>
+            <div class="gallery-card"><div class="gallery-image" style="background-image: url('https://picsum.photos/id/312/400/300');">🍰</div><div class="gallery-caption"><h4>Мастер-класс</h4><p>Категория: Обучение</p></div><div class="gallery-url-input"><input type="text" placeholder="URL вашего фото" value="https://picsum.photos/id/312/400/300"><button>OK</button></div></div>
+            <div class="gallery-card"><div class="gallery-image" style="background-image: url('https://picsum.photos/id/433/400/300');">🍪</div><div class="gallery-caption"><h4>Печенье</h4><p>Категория: Десерты</p></div><div class="gallery-url-input"><input type="text" placeholder="URL вашего фото" value="https://picsum.photos/id/433/400/300"><button>OK</button></div></div>
+        </div>
+        <div style="text-align: center; margin-top: clamp(32px, 6vw, 56px);">
+            <a href="https://feekool.github.io" target="_blank" class="btn btn-primary btn-large">🎨 Больше примеров в демо</a>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section" id="contact" aria-labelledby="cta-title">
+        <div class="cta-badge">🔥 Присоединяйтесь к сообществу</div>
+        <h3 id="cta-title">Превратите творчество в систему</h3>
+        <p>Хватит терять клиентов в мессенджерах. BakeForum даёт структурированное пространство для обучения, продаж и комьюнити-билдинга.</p>
+        <div class="cta-buttons">
+            <a href="https://feekool.github.io" target="_blank" class="btn btn-large btn-white">📢 Презентация</a>
+            <a href="https://feekool.github.io" target="_blank" class="btn btn-large btn-outline-white">🚀 Открыть демо</a>
+            <a href="https://github.com/feekool/feekool.github.io/issues" target="_blank" class="btn btn-large btn-outline-white">💬 Консультация</a>
+        </div>
+        <div class="cta-guarantee">⚡ <strong>Бесплатная установка + настройка под вашу нишу!</strong> Напишите нам — поможем выбрать структуру разделов, дизайн и функции.</div>
+    </section>
+
+    <!-- Final Actions -->
+    <div class="final-actions" role="navigation" aria-label="Основные действия">
+        <a href="https://feekool.github.io" target="_blank" class="btn btn-primary btn-large">🎯 Демо-презентация</a>
+        <a href="https://feekool.github.io" target="_blank" class="btn btn-outline btn-large">👁️ Предварительный просмотр</a>
+        <a href="https://github.com/feekool/feekool.github.io" target="_blank" class="btn btn-outline btn-large">🐙 Исходный код</a>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>© BakeForum — платформа для кондитеров на GitHub Pages.<br>
+        Базовая open-source версия свободна для использования.<br>
+        Индивидуальная кастомизация под вашу кондитерскую — <a href="https://feekool.github.io/" target="_blank">свяжитесь с нами</a>.</p>
+        <p style="margin-top: 18px;">🚀 Без серверов • Без абонентской платы • Только ваш бренд и рост</p>
+        <p style="margin-top: 14px;">
+            <a href="https://feekool.github.io" target="_blank" style="color: var(--sunset-dark); font-weight: 700; font-size: 1.08rem;">
+                👁️ Открыть демо-форум прямо сейчас
+            </a>
+        </p>
+    </footer>
+</div>
+
+<!-- Mobile CTA -->
+<div class="mobile-cta" role="navigation" aria-label="Быстрый доступ">
+    <a href="https://feekool.github.io" target="_blank" class="btn btn-primary">🚀 Открыть демо-форум</a>
+</div>
+
+<!-- Scripts -->
+<script>
+    (function() {
+        document.querySelectorAll('.gallery-card').forEach(card => {
+            const img = card.querySelector('.gallery-image');
+            const input = card.querySelector('input');
+            const btn = card.querySelector('button');
+            if (btn && img && input) {
+                btn.addEventListener('click', () => {
+                    const url = input.value.trim();
+                    if (url) { try { new URL(url); img.style.backgroundImage = `url('${url.replace(/'/g, "\\'")}')`; } catch(e) { alert('Введите корректный URL'); } }
+                });
+                input.addEventListener('keypress', (e) => { if (e.key === 'Enter') { e.preventDefault(); btn.click(); } });
+            }
+        });
+        const mobileCta = document.querySelector('.mobile-cta');
+        if (mobileCta) {
+            let lastScroll = 0;
+            window.addEventListener('scroll', () => {
+                const current = window.pageYOffset;
+                if (current > 400 && current > lastScroll) { mobileCta.style.transform = 'translateY(0)'; mobileCta.style.opacity = '1'; }
+                else if (current < 150) { mobileCta.style.transform = 'translateY(100px)'; mobileCta.style.opacity = '0'; }
+                lastScroll = current;
+            }, { passive: true });
+        }
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (href !== '#' && href.startsWith('#')) { e.preventDefault(); const target = document.querySelector(href); if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+            });
+        });
+    })();
+</script>
+
+<!-- Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "BakeForum",
+  "description": "Платформа для кондитеров: создайте форум для мастер-классов, витрины, рецептов и B2B на GitHub Pages за 1 минуту",
+  "applicationCategory": "ForumApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "RUB" },
+  "url": "https://feekool.github.io",
+  "featureList": ["Портфолио и витрина работ", "Онлайн-курсы с ДЗ", "Цифровое меню пекарни", "Кулинарная библиотека", "B2B-нетворкинг", "Международные челленджи"]
+}
+</script>
+</body>
+</html>
